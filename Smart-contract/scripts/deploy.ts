@@ -9,7 +9,7 @@ async function main() {
 
     // Deploy ERC20 Token
     const Token = await ethers.getContractFactory("ERC20");
-    const token = await Token.deploy("MayToken", "MTK", 18, ethers.parseUnits("100", 18));
+    const token = await Token.deploy("MayToken", "MTK", 18, 100000);
     await token.waitForDeployment();
     const tokenAddress = await token.getAddress();
     console.log(`ERC20 token deployed at: ${tokenAddress}`);
@@ -23,7 +23,7 @@ async function main() {
             console.log("Verifying ERC20 token contract...");
             await run("verify:verify", {
                 address: tokenAddress,
-                constructorArguments: ["MayToken", "MTK", 18, ethers.parseUnits("100", 18)],
+                constructorArguments: ["MayToken", "MTK", 18, 100000],
             });
             console.log("ERC20 token verified successfully!");
         } catch (error) {
