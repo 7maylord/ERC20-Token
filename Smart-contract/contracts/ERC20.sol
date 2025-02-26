@@ -5,8 +5,9 @@ contract ERC20 {
     string private _name;
     string private _symbol;
     uint8 private _decimals;
-    uint256 private _totalSupply;
     address private _owner;
+    uint256 private _totalSupply;
+    
 
     mapping(address => uint256) private balances;
     mapping(address => mapping(address => uint256)) private allowances;
@@ -28,11 +29,11 @@ contract ERC20 {
         _;
     }
 
-    constructor(string memory name_, string memory symbol_, uint8 decimals_, uint256 initialSupply_) {
-        _owner = msg.sender;
+    constructor(string memory name_, string memory symbol_, uint8 decimals_, uint256 initialSupply_) {        
         _name = name_;
         _symbol = symbol_;
         _decimals = decimals_;
+        _owner = msg.sender;
         _totalSupply = initialSupply_ * 10 ** uint8(_decimals);
         balances[msg.sender] = _totalSupply;
 
@@ -62,6 +63,11 @@ contract ERC20 {
     function balanceOf(address _account) public view returns (uint256) {
         if (_account == address(0)) revert InvalidAddress();
         return balances[_account];
+    }
+
+    function allowance(address _accountOwner, address _spender) public view returns (uint256) {
+        if (_spender == address(0)) revert InvalidAddress();
+        return allowances[_accountOwner][_spender];
     }
     
     function transfer(address _to, uint256 _value) public returns (bool) {
@@ -97,11 +103,6 @@ contract ERC20 {
         
         emit Transfer(_from, _to, _value);
         return true;
-    }
-
-    function allowance(address _accountOwner, address _spender) public view returns (uint256) {
-        if (_spender == address(0)) revert InvalidAddress();
-        return allowances[_accountOwner][_spender];
     }
 
     function increaseAllowance(address _spender, uint256 _addedValue) public returns (bool) {
